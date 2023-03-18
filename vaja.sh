@@ -111,3 +111,32 @@ if [ $inp == "y" ] ;then
 fi
 done
 }
+iskanje() {
+	for arg in "$@"; do
+  shift
+  case "$arg" in
+  	"-ime") set -- "$@" "-a" ;;
+    "-priimek") set -- "$@" "-p" ;;
+    "-naslov")   set -- "$@" "-n" ;;
+    "-posta") set -- "$@" "-o" ;;
+    "-kraj") set -- "$@" "-k" ;;
+    "-tel")   set -- "$@" "-t" ;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+    local OPTIND
+    while getopts :a:p:n:o:k:t: flag
+do
+    case "${flag}" in
+        a) ime=${OPTARG};;
+        p) priimek=${OPTARG};;
+        n) naslov=${OPTARG};;
+        o) posta=${OPTARG};;
+        k) kraj=${OPTARG};;
+        t) tel=${OPTARG};;
+    esac
+done
+shift $((OPTIND-1))
+#iskanje uporabnika, ki ga zelimo najti 
+grep -E "*$ime.*$priimek.*$naslov.*$posta.*$kraj.*$tel|$ime.$priimek.$naslov.$posta.$kraj.$tel" imenik_26285.dat
+}
