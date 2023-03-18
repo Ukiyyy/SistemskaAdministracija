@@ -232,7 +232,7 @@ done
 #ce je podana vec kot 1 osnovna zastavica se program zakljuci in izpise opozorilo
 if [[ c -eq 2 || c -gt 2 ]]
 then
-echo "Skripta se je zaklucila. Prevec osnovnih zastavic"
+echo "napaka"
 exit 0
 fi
 
