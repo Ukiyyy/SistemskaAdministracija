@@ -140,3 +140,82 @@ shift $((OPTIND-1))
 #iskanje uporabnika, ki ga zelimo najti 
 grep -E "*$ime.*$priimek.*$naslov.*$posta.*$kraj.*$tel|$ime.$priimek.$naslov.$posta.$kraj.$tel" imenik_26285.dat
 }
+urejanje() {
+for arg in "$@"; do
+  shift
+  case "$arg" in
+    "-id") set -- "$@" "-a" ;;
+    "-ime") set -- "$@" "-j" ;;
+    "-priimek") set -- "$@" "-p" ;;
+    "-naslov")   set -- "$@" "-n" ;;
+    "-posta") set -- "$@" "-o" ;;
+    "-kraj") set -- "$@" "-k" ;;
+    "-tel")   set -- "$@" "-t" ;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+    local OPTIND
+    while getopts :a:j:p:n:o:k:t: flag
+do
+    case "${flag}" in
+        a) id=${OPTARG};;
+        j) ime=${OPTARG};;
+        p) priimek=${OPTARG};;
+        n) naslov=${OPTARG};;
+        o) posta=${OPTARG};;
+        k) kraj=${OPTARG};;
+        t) tel=${OPTARG};;
+    esac
+done
+shift $((OPTIND-1))
+
+grep -w $id $file #najprej izpisemo vrstico ki jo zelimo urejati
+read -p "Potrdite urejanje z 'y': " inp #potrjevanje z 'y'
+#ce smo vnesli 'y' vsak if preveri za svojo zastavico ce je prazna torej ce smo vnesli vrenost
+#poleg zastavice in ce nismo se izpise da bo ostalo nespremenjeno ce pa smo vnesli vrednost
+#pa se bo nastavila vrednost, ki smo jo zeleli
+if [ $inp == "y" ] ;then
+    if [[ $ime == "daj" || -z $ime ]]
+    then
+      	echo "Ime bo nespremenjeno"
+    else
+    	im="$(grep -w $id imenik_26285.dat | sed -e "s/;;/ /g" | awk '{print $2}')" #poiscemo tisto besedo ki jo zelimo spremeniti in odstranimo znake -- ter jo shranimo v vrednost
+    	sed -i "/$id/ s/$im/$ime/" imenik_26285.dat #v tisti vrsti, kjer je ta id kot smo dolocili najdemo besedo katere smo shranili vrednost in ji dolocimo novo vrednost
+    fi
+    if [[ $priimek == "daj" || -z $priimek ]]
+    then
+      	echo "Priimek bo nespremenjen"
+    else
+  		two="$(grep -w $id imenik_26285.dat | sed -e "s/;;/ /g" | awk '{print $3}')"
+  		sed -i "/$id/ s/$two/$priimek/" imenik_26285.dat
+    fi
+    if [[ $naslov == "daj" || -z $naslov ]]
+    then
+      	echo "Naslov bo nespremenjen"
+    else
+  		three="$(grep -w $id imenik_26285.dat | sed -e "s/;;/ /g" | awk '{print $4}')"
+  		sed -i "/$id/ s/$three/$naslov/" imenik_26285.dat
+    fi
+    if [[ $posta == "daj" || -z $posta ]]
+    then
+      	echo "Posta bo nespremenjen"
+    else
+  		four="$(grep -w $id imenik_26285.dat | sed -e "s/;;/ /g" | awk '{print $5}')"
+  		sed -i "/$id/ s/$four/$posta/" imenik_26285.dat
+    fi
+    if [[ $kraj == "daj" || -z $kraj ]]
+    then
+      	echo "Kraj bo nespremenjen"
+    else
+  		five="$(grep -w $id imenik_26285.dat | sed -e "s/;;/ /g" | awk '{print $6}')"
+  		sed -i "/$id/ s/$five/$kraj/" imenik_26285.dat
+    fi
+    if [[ $tel == "daj" || -z $tel ]]
+    then
+      	echo "Telefon bo nespremenjen"
+    else
+      	six="$(grep -w $id imenik_26285.dat | sed -e "s/;;/ /g" | awk '{print $7}')"
+  		sed -i "/$id/ s/$six/$tel/" imenik_26285.dat
+    fi
+fi
+}
