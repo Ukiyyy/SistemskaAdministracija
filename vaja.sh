@@ -85,3 +85,29 @@ echo -n "$id" >> imenik_26285.dat #zapisem id v datoteko
 echo "" >> imenik_26285.dat
 #echo "$id $ime $priimek $naslov $posta $kraj $tel" >> imenik_26285.dat
 }
+brisanje() {
+for arg in "$@"; do
+  shift
+  case "$arg" in
+  	"-id") set -- "$@" "-i" ;;
+    *)        set -- "$@" "$arg"
+  esac
+done
+    local OPTIND
+    while getopts :i: flag
+do
+    case "${flag}" in
+        i) id=${OPTARG};;
+    esac
+done
+shift $((OPTIND-1))
+
+grep -w $id $file #izpisem vrstico ki jo zelimo brisati preko ID stevilke
+read -p "Potrdite brisanje z 'y': " inp #input da potrdimo brisanje
+grep -w $id $file | while read -r line ; do #poisce tisto vrstico
+	#i=$[ $i +1 ]
+if [ $inp == "y" ] ;then
+	echo "`sed  /"$line"/d  imenik_26285.dat`" > imenik_26285.dat #ce je input 'y' izbrisemo
+fi
+done
+}
