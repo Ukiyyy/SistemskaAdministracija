@@ -219,3 +219,30 @@ if [ $inp == "y" ] ;then
     fi
 fi
 }
+c=0
+for v in "$@"
+do
+  if [[ $v == *"-dodaj"* || $v == *"-isci"* || $v == *"-uredi"* || $v == *"-brisi"* ]]
+  then
+    c=$((c+1))
+  fi
+done
+
+
+#ce je podana vec kot 1 osnovna zastavica se program zakljuci in izpise opozorilo
+if [[ c -eq 2 || c -gt 2 ]]
+then
+echo "Skripta se je zaklucila. Prevec osnovnih zastavic"
+exit 0
+fi
+
+#glede na izbrano zastavico se izvede dolocena funkcija
+if [[ $1 == *"-dodaj"* ]] ;then
+  dodajanje "$@"
+elif [[ $1 == *"-isci"* ]] ;then
+	iskanje "$@"
+elif [[ $1 == *"-uredi"* ]] ;then
+	urejanje "$@"
+elif [[ $1 == *"-brisi"* ]] ;then
+	brisanje "$@"
+fi
